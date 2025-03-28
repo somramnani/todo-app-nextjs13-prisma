@@ -4,12 +4,13 @@ import { useState, useEffect } from "react";
 
 const Todo = () => {
   const [todos, setTodos] = useState([]);
+  const [updatedPrompt, setUpdatedPrompt] = useState("");
 
   const deleteTodo = async (id) => {
+    console.log(id);
     const response = await fetch(`api/todos/${id}`, {
       method: "DELETE",
     });
-
     if (!response.ok) throw new Error("Failed to delete todo");
   };
 
@@ -22,8 +23,37 @@ const Todo = () => {
     }
   };
 
-  const updateTODO = () => {
+  const fetchTodoPUT = async (id, updatedPrompt) => {
+    try {
+      const response = await fetch(`api/todos/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ updated_prompt: updatedPrompt }),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        setTodos((prevTodos) =>
+          prevTodos.map((todo) =>
+            todo.id === id ? { ...todo, ...result } : todo
+          )
+        );
+      } else {
+        throw new Error("Failed to update todo");
+      }
+    } catch (error) {
+      console.error("Error sending request:", error);
+    }
+  };
+
+  const updateTODO = async (id) => {
     console.log("clicked!");
+    const updatedPrompt = prompt("Enter updated list");
+    if (updatedPrompt !== null) {
+      fetchTodoPUT(id, updatedPrompt);
+    }
   };
 
   useEffect(() => {
@@ -65,7 +95,7 @@ const Todo = () => {
             </button>
             <button
               onClick={() => {
-                updateTODO();
+                updateTODO(item.id);
               }}
             >
               Update

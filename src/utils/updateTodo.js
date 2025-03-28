@@ -4,10 +4,10 @@ export const updateTodo = async (id, updateTodo) => {
   try {
     const results = await prisma.todo.update({
       where: {
-        id: 32,
+        id: id,
       },
       data: {
-        todo_item: "Shower",
+        todo_item: updateTodo,
       },
     });
     return results;
