@@ -20,19 +20,9 @@ export async function DELETE(request, { params }) {
   }
 }
 
-// export async function DELETE({ params }) {
-//   console.log("congrats you have reached this route!");
-// }
-
 export async function PUT(request, { params }) {
-  console.log("congrats you ahve reached the PUT route!");
   const { itemId } = params;
   const { updated_prompt } = await request.json();
-
-  console.log({
-    ID: itemId,
-    updated_prompt: updated_prompt,
-  });
 
   try {
     const updateTODO = await updateTodo(parseInt(itemId), updated_prompt);

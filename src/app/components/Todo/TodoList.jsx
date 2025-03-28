@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 
 const Todo = () => {
   const [todos, setTodos] = useState([]);
-  const [updatedPrompt, setUpdatedPrompt] = useState("");
 
   const deleteTodo = async (id) => {
     console.log(id);
@@ -109,7 +108,6 @@ const Todo = () => {
   return (
     <div>
       <Searchbar setTodo={setTodos} />
-
       {todos ? displayLists(todos) : "No Todo lists"}
     </div>
   );
