@@ -1,38 +1,196 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Todo List App - Next.js Prisma
+
+## Overview
+
+This is a simple Todo List application built using Next.js with the App Router and Prisma for database management. It allows users to Create, Read, Update, and Delete tasks efficiently.
+
+## Features
+
+- Add new tasks
+- Edit existing tasks
+- Delete tasks
+- Persist data using Prisma with a PostgreSQL database
+
+## Technologies Used
+
+- **Next.js** (App Router)
+- **Prisma** (ORM for database management)
+- **TypeScript** (Optional, if used)
+- **Tailwind CSS** (Optional, if used for styling)
+- **PostgreSQL** (or any other Prisma-supported database)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+Ensure you have the following installed:
+
+- Node.js (latest LTS version recommended)
+- PostgreSQL
+- Yarn or npm
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/somramnani/todo-app-nextjs13-prisma.git
+   cd nextjs-app-router-todo
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+### Database Setup
+
+1. Copy the example environment file and update the variables:
+   ```bash
+   cp .env.example .env
+   ```
+2. Update the `.env` file with your database URL:
+   ```env
+   DATABASE_URL="postgresql://user:password@localhost:5432/todoapp"
+   ```
+3. Run Prisma migrations:
+   ```bash
+   npx prisma migrate dev --name init
+   ```
+4. Generate Prisma client:
+   ```bash
+   npx prisma generate
+   ```
+
+### Running the App
+
+Start the development server:
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Deploying
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+For deployment, ensure the production database is configured and use:
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+```bash
+npm run build
+npm start
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## API Routes
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- `GET /api/todos` - Fetch all todos
+- `POST /api/todos` - Add a new todo
+- `PUT /api/todos/:id` - Update a todo
+- `DELETE /api/todos/:id` - Delete a todo
 
-## Learn More
+### GET
 
-To learn more about Next.js, take a look at the following resources:
+```
+export async function GET() {
+  try {
+    const todos = await queryAllData();
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+    if (!todos || todos.length === 0) {
+      return new Response(JSON.stringify({ message: "No todos found" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+    return new Response(JSON.stringify(todos), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Error fetching todos:", error);
+    return new Response(JSON.stringify({ error: "Failed to fetch todos" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+}
+```
 
-## Deploy on Vercel
+### POST
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+export async function POST(request) {
+  try {
+    const { todo_item } = await request.json();
+    if (!todo_item) {
+      return new Response(
+        JSON.stringify({ message: "No todo item provided" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+    const newTodo = await createTodo(todo_item);
+
+    return new Response(JSON.stringify(newTodo), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Error creating todo:", error);
+    return new Response(JSON.stringify({ error: "Failed to create todo" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+}
+```
+
+### PUT
+
+```
+export async function PUT(request, { params }) {
+  const { itemId } = params;
+  const { updated_prompt } = await request.json();
+
+  try {
+    const updateTODO = await updateTodo(parseInt(itemId), updated_prompt);
+
+    return new Response(JSON.stringify(updateTODO), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Error deleting todo", error);
+    return new Response(JSON.stringify({ error: "Failed to update todo" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+}
+```
+
+### DELETE
+
+```
+export async function DELETE(request, { params }) {
+  const { itemId } = params;
+
+  try {
+    const updatedTODO = await deleteTodo(parseInt(itemId));
+
+    return new Response(JSON.stringify(updatedTODO), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Error deleting todo", error);
+    return new Response(JSON.stringify({ error: "Failed to delete todo" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+}
+```
