@@ -87,6 +87,7 @@ npm start
 ### GET
 
 ```
+// GET /api/todos
 export async function GET() {
   try {
     const todos = await queryAllData();
@@ -115,6 +116,7 @@ export async function GET() {
 ### POST
 
 ```
+// POST /api/todos
 export async function POST(request) {
   try {
     const { todo_item } = await request.json();
@@ -147,6 +149,7 @@ export async function POST(request) {
 ### PUT
 
 ```
+// PUT /api/todos/:id
 export async function PUT(request, { params }) {
   const { itemId } = params;
   const { updated_prompt } = await request.json();
@@ -171,6 +174,7 @@ export async function PUT(request, { params }) {
 ### DELETE
 
 ```
+// DELETE /api/todos/:id
 export async function DELETE(request, { params }) {
   const { itemId } = params;
 
