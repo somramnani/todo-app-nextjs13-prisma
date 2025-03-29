@@ -88,6 +88,8 @@ npm start
 
 ```
 // GET /api/todos
+import { queryAllData } from "@/src/utils/getQueryOutput";
+
 export async function GET() {
   try {
     const todos = await queryAllData();
@@ -117,6 +119,8 @@ export async function GET() {
 
 ```
 // POST /api/todos
+import { createTodo } from "@/src/utils/createTodo";
+
 export async function POST(request) {
   try {
     const { todo_item } = await request.json();
@@ -150,6 +154,8 @@ export async function POST(request) {
 
 ```
 // PUT /api/todos/:id
+import { updateTodo } from "@/src/utils/updateTodo";
+
 export async function PUT(request, { params }) {
   const { itemId } = params;
   const { updated_prompt } = await request.json();
@@ -175,6 +181,8 @@ export async function PUT(request, { params }) {
 
 ```
 // DELETE /api/todos/:id
+import { deleteTodo } from "@/src/utils/deleteTodo";
+
 export async function DELETE(request, { params }) {
   const { itemId } = params;
 
