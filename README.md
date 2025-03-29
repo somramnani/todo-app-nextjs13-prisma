@@ -11,9 +11,9 @@ This is a simple Todo List application built using **Next.js** with the **App Ro
 
 ## Technologies Used
 
-- **Next.js** (App Router)
-- **Prisma** (ORM for database management)
-- **PostgreSQL** (or any other Prisma-supported database)
+- **Next.js** 
+- **Prisma** 
+- **PostgreSQL** 
 
 ## Getting Started
 
