@@ -1,7 +1,5 @@
 # Todo List App - Next.js Prisma
 
-## Overview
-
 This is a simple Todo List application built using Next.js with the App Router and Prisma for database management. It allows users to Create, Read, Update, and Delete tasks efficiently.
 
 ## Features
@@ -15,8 +13,6 @@ This is a simple Todo List application built using Next.js with the App Router a
 
 - **Next.js** (App Router)
 - **Prisma** (ORM for database management)
-- **TypeScript** (Optional, if used)
-- **Tailwind CSS** (Optional, if used for styling)
 - **PostgreSQL** (or any other Prisma-supported database)
 
 ## Getting Started
